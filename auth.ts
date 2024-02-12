@@ -9,7 +9,14 @@ import authConfig from "@/auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
 import { getUserById } from "./data/user";
+import { UserRole } from "@prisma/client";
 
+declare module "next-auth" {
+  interface User {
+    /** The user's postal address. */
+    role?: UserRole;
+  }
+}
 
 export const {
   handlers: { GET, POST },
@@ -18,16 +25,29 @@ export const {
   signOut,
 } = NextAuth({
     callbacks: {
+      // if user didn't verified his mail he will not signup
+      // async signIn({ user }) {
+      //   const existingUser = await getUserById(user.id);
+      //   if(!existingUser || !existingUser.emailVerified){
+      //     return false;
+      //   }
+
+      //   return true;
+      // },
+      
+
       async session({ session, token }) {
         // https://authjs.dev/getting-started/typescript
         // jak dodaje session.user.role to podświetla się więc trzeba zrobić module augmention dla typescript,
         // podświetla się dlatego, że user nie istnieje w session 
         if(token.role && session.user){
-          session.user.role = token.role;
+          session.user.role = token.role as UserRole;
         }
         if(token.sub && session.user) {
           session.user.id = token.sub;
         }
+
+
         return session
       },
       // token to informacje o użytkowniku, które się wyświetlają, zdjęcie, nazwa, email itp.
