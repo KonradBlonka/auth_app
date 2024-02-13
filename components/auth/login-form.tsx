@@ -22,12 +22,16 @@ import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
 import { login } from "@/server-actions/login";
 import { useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation"; 
 
 
 // https://github.com/react-hook-form/resolvers#zod form hook
 // tutaj napisane jak ma działać form czyli ma być e-mail i hasło 
 // z.infer to po prostut zabrarnie typu (czyli w tym przypadku strignów) z LoginSchema
 export const LoginForm = () => {
+
+    const searchParams = useSearchParams();
+    const urlError = searchParams.get("error") === "OAuthAccountNotLinked" ? "Email in use with diffrent provider" : "";
 
     // useState it's for tell if user make correct form
     const [error, setError] = useState<string | undefined>("");
@@ -49,8 +53,8 @@ export const LoginForm = () => {
         startTransition(() => {
             login(values)
             .then((data) => {
-                setError(data.error);
-                setSuccess(data.success);
+                setError(data?.error);
+                setSuccess(data?.success);
             });
         });
     };
@@ -111,7 +115,7 @@ export const LoginForm = () => {
                         />
                     </div>
                     {/* pokaż wiadomość czy prawidłowy login czy błedny login */}
-                    <FormError message={error} />
+                    <FormError message={error || urlError} />
                     <FormSuccess message={success} />
                     <Button
                         disabled={isPending}

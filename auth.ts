@@ -24,7 +24,36 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
+  // if something goes wrong go to this pages
+    pages: {
+      signIn: "/auth/login",
+      error: "/auth/error",
+    },
+    events: {
+      // email is verified (Google oAuth)
+      async linkAccount({ user }) {
+        await db.user.update({
+          where: { id: user.id },
+          data: { emailVerified: new Date() }
+        })
+      }
+    },
     callbacks: {
+      // allow oAuth without verification
+      async signIn({ user, account }) {
+        if(account?.provider !== "credentials") {
+          return true;
+        }
+
+        // Don't allow sigin in without email verification
+        const existingUser = await getUserById(user.id);
+        if(!existingUser?.emailVerified){
+          return false;
+        }
+
+        return true;
+      },
+
       // if user didn't verified his mail he will not signup
       // async signIn({ user }) {
       //   const existingUser = await getUserById(user.id);

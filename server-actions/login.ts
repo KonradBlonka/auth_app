@@ -8,6 +8,9 @@ import { LoginSchema } from "@/schemas";
 import { signIn } from "@/auth"; 
 import { DEFAULT_LOGIN_REDIRECT } from "@/route";
 import { AuthError } from "next-auth";
+import { generateVerificationToken } from "@/lib/tokens";
+import { getUserByEmail } from "@/data/user";
+import { sendVerificationEmail } from "@/lib/mail";
 
 
 //  function that accepts a parameter values conforming to the LoginSchema structure
@@ -25,6 +28,26 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     }
 
     const { email, password } = validatedField.data;
+
+    // Don't login if the account is not verified and doesn't exist
+    const existingUser = await getUserByEmail(email);
+    if (!existingUser || !existingUser.email || !existingUser.password) {
+        return { error: "Email doesn't exist"}
+    }
+
+    if (!existingUser.emailVerified){
+        const verificationToken = await generateVerificationToken(existingUser.email);
+        // jak się zalogujesz to wyślij ponownie weryfikacje
+        await sendVerificationEmail(
+            verificationToken.email,
+            verificationToken.token,
+        );
+
+        return { success: "Confirm your email"}
+    };
+
+   
+
     try {
         await signIn("credentials", {
             email,

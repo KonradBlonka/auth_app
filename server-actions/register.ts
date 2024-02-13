@@ -8,6 +8,8 @@ import bcrypt from "bcryptjs";
 import { RegisterSchema } from "@/schemas";
 import { db } from "@/lib/db";
 import { getUserByEmail } from "@/data/user";
+import { generateVerificationToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/mail";
 
 //  function that accepts a parameter values conforming to the LoginSchema structure
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
@@ -41,5 +43,11 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         },
     });
 
-    return {success: "Account created"};
+    const verificationToken = await generateVerificationToken(email);
+    await sendVerificationEmail(
+        verificationToken.email,
+        verificationToken.token,
+    );
+
+    return {success: "Confirmation email sent"};
 }

@@ -3,9 +3,10 @@
  * these routes do not require authentication
  * @type {string[]}
  */
-
+// I add "/auth/new-verification" in publicRoutes, because user will be able to change email
 export const publicRoutes = [
     "/",
+    "/auth/new-verification"
 ];
 
 /**
@@ -17,6 +18,7 @@ export const publicRoutes = [
 export const authRoutes = [
     "/auth/login",
     "/auth/register",
+    "/auth/error",
 ];
 
 /**
