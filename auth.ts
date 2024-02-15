@@ -10,6 +10,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
 import { getUserById } from "./data/user";
 import { UserRole } from "@prisma/client";
+import { get2FAConfirmationUserId } from "./data/2FA-confirmation";
 
 declare module "next-auth" {
   interface User {
@@ -49,6 +50,17 @@ export const {
         const existingUser = await getUserById(user.id);
         if(!existingUser?.emailVerified){
           return false;
+        }
+
+        if(existingUser.enable2FA) {
+          const confirmation2FA = await get2FAConfirmationUserId(existingUser.id);
+          console.log({ confirmation2FA });
+          if(!confirmation2FA){
+            return false;
+          } 
+          await db.confirm2FA.delete({
+            where: { id: confirmation2FA.id }
+          })
         }
 
         return true;

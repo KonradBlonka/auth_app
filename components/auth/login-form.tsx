@@ -37,6 +37,7 @@ export const LoginForm = () => {
     // useState it's for tell if user make correct form
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
+    const [show2FA, setShow2FA] = useState(false);
 
     const [isPending, startTransition] = useTransition();
     const form = useForm<z.infer<typeof LoginSchema>>({
@@ -54,9 +55,20 @@ export const LoginForm = () => {
         startTransition(() => {
             login(values)
             .then((data) => {
-                setError(data?.error);
-                setSuccess(data?.success);
-            });
+                if(data?.error) {
+                    // form.reset = fields will be emptied
+                    form.reset();
+                    setError(data?.error);
+                }
+                if(data?.success) {
+                    form.reset();
+                    setSuccess(data?.success);
+                }
+                if(data?.twoFactor) {
+                    setShow2FA(true);
+                }
+            })
+            .catch(() => setError("Something wrong with login"));
         });
     };
 
@@ -74,6 +86,27 @@ export const LoginForm = () => {
                     className="space-y-5"
                 >
                     <div className="space-y-5">
+                        {show2FA && (
+                            <FormField
+                            control={form.control}
+                            name="code"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>2FA code</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                        {...field}
+                                        disabled={isPending}
+                                        placeholder="Write your 2FA code"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        )}
+                        {!show2FA && ( 
+                        <> 
                         <FormField
                             control={form.control}
                             name="email"
@@ -119,6 +152,7 @@ export const LoginForm = () => {
                                 </FormItem>
                             )}
                         />
+                        </>)}
                     </div>
                     {/* pokaż wiadomość czy prawidłowy login czy błedny login */}
                     <FormError message={error || urlError} />
@@ -127,7 +161,7 @@ export const LoginForm = () => {
                         disabled={isPending}
                         type="submit"
                         className="w-full">
-                        Login
+                        {show2FA ? "Confirm" : "Login"}
                     </Button>
                     
                 </form>

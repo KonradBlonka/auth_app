@@ -8,10 +8,12 @@ import { LoginSchema } from "@/schemas";
 import { signIn } from "@/auth"; 
 import { DEFAULT_LOGIN_REDIRECT } from "@/route";
 import { AuthError } from "next-auth";
-import { generateVerificationToken } from "@/lib/tokens";
+import { generateVerificationToken, generate2FAToken } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
-import { sendVerificationEmail } from "@/lib/mail";
-
+import { sendVerificationEmail, send2FATokenEmail } from "@/lib/mail";
+import { get2FATokenByEmail } from "@/data/2FA-token";
+import { db } from "@/lib/db"; 
+import { get2FAConfirmationUserId } from "@/data/2FA-confirmation";
 
 //  function that accepts a parameter values conforming to the LoginSchema structure
 export const login = async (values: z.infer<typeof LoginSchema>) => {
@@ -27,10 +29,11 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         return { error: "Invalid fields"};
     }
 
-    const { email, password } = validatedField.data;
+    const { email, password, code } = validatedField.data;
 
     // Don't login if the account is not verified and doesn't exist
     const existingUser = await getUserByEmail(email);
+
     if (!existingUser || !existingUser.email || !existingUser.password) {
         return { error: "Email doesn't exist"}
     }
@@ -46,6 +49,48 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         return { success: "Confirm your email"}
     };
 
+// when 2FA is enabled and email exist generate 2FA token and send it 
+    if(existingUser.enable2FA && existingUser.email) {
+        if(code) {
+            const token2FA = await get2FATokenByEmail(existingUser.email);
+            if(!token2FA) {
+                return { error: "Write 2FA code"};
+            }
+            if(token2FA.token !== code) {
+                return { error: "Invalid 2FA code"};
+            }
+            const hasExpired = new Date(token2FA.expires) < new Date();
+            if(hasExpired) {
+                return { error: "2FA code expired" };
+            }
+
+            await db.token2FA.delete({
+                where: { id: token2FA.id }
+            });
+
+            const existingConfirmation = await get2FAConfirmationUserId(existingUser.id);
+            if(existingConfirmation) {
+                await db.confirm2FA.delete({
+                    where: { id: existingConfirmation.id}
+                });
+            };
+            await db.confirm2FA.create({
+                data: {
+                    userId: existingUser.id
+                }
+            });
+
+        }
+        else {
+            const token2FA = await generate2FAToken(existingUser.email)
+            await send2FATokenEmail(
+                token2FA.email,
+                token2FA.token
+            );
+            return { twoFactor: true }
+            }   
+    }
+    
    
 
     try {
