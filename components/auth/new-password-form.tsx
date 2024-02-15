@@ -7,7 +7,7 @@ import { CardWrapper } from "./card-wrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ResetSchema } from "@/schemas";
+import { NewPasswordSchema } from "@/schemas";
 import {
     Form,
     FormControl,
@@ -20,13 +20,19 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
-import { resetPassword } from "@/server-actions/reset";
+import { newPassword } from "@/server-actions/new-password";
 import { useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation";
 
 // https://github.com/react-hook-form/resolvers#zod form hook
 // tutaj napisane jak ma działać form czyli ma być e-mail i hasło 
 // z.infer to po prostut zabrarnie typu (czyli w tym przypadku strignów) z LoginSchema
-export const ResetPageForm = () => {
+export const NewPasswordForm = () => {
+
+    // take reset password token from URL
+    const searchParams = useSearchParams();
+    const token = searchParams.get("token");
+
 
 
     // useState it's for tell if user make correct form
@@ -34,21 +40,21 @@ export const ResetPageForm = () => {
     const [success, setSuccess] = useState<string | undefined>("");
 
     const [isPending, startTransition] = useTransition();
-    const form = useForm<z.infer<typeof ResetSchema>>({
-        resolver: zodResolver(ResetSchema),
+    const form = useForm<z.infer<typeof NewPasswordSchema>>({
+        resolver: zodResolver(NewPasswordSchema),
         defaultValues: {
-            email: "",
+            password: "",
         },
     });
 
-    const OnSubmit = (values: z.infer<typeof ResetSchema>) => {
+    const OnSubmit = (values: z.infer<typeof NewPasswordSchema>) => {
         setError("");
         setSuccess("");
 
         console.log(values)
 
         startTransition(() => {
-            resetPassword(values)
+            newPassword(values, token)
             .then((data) => {
                 setError(data?.error);
                 setSuccess(data?.success);
@@ -58,7 +64,7 @@ export const ResetPageForm = () => {
 
     return ( 
         <CardWrapper
-            headerLabel="Forgot your password?"
+            headerLabel="Enter New Password"
             backButtonLabel="Login here"
             backButtonHref="/auth/login"
         >
@@ -71,16 +77,16 @@ export const ResetPageForm = () => {
                     <div className="space-y-5">
                         <FormField
                             control={form.control}
-                            name="email"
+                            name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Email</FormLabel>
+                                    <FormLabel>Password</FormLabel>
                                     <FormControl>
                                         <Input 
                                         {...field}
                                         disabled={isPending}
-                                        placeholder="Write your e-mail adress"
-                                        type="email"
+                                        placeholder="Write your new password"
+                                        type="password"
                                         />
                                     </FormControl>
                                     {/* FormMessage robi, że jak jest błąd to pokazuje się napis 'Invalid email' 
@@ -98,7 +104,7 @@ export const ResetPageForm = () => {
                         disabled={isPending}
                         type="submit"
                         className="w-full">
-                        Send reset on email
+                        Reset password
                     </Button>
                     
                 </form>
