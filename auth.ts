@@ -84,9 +84,16 @@ export const {
         if(token.role && session.user){
           session.user.role = token.role as UserRole;
         }
+
         if(token.sub && session.user) {
           session.user.id = token.sub;
         }
+
+        if(session.user){
+          session.user.enable2FA = token.enable2FA as boolean;
+        }
+
+        
 
 
         return session
@@ -101,6 +108,7 @@ export const {
           return token;
         }
         token.role = existingUser.role;
+        token.enable2FA = existingUser.enable2FA;
         return token
       }
     },

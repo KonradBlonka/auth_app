@@ -27,15 +27,11 @@ export const UserButton = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-30" align="end">
                 <LogoutButton>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
                         <BiLogOut className="h-4 w-4 mr-2" />
                         Logout
                     </DropdownMenuItem>
                 </LogoutButton>
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-                <DropdownMenuItem>Team</DropdownMenuItem>
-                <DropdownMenuItem>Subscription</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
 
