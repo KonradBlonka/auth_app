@@ -22,6 +22,13 @@ export const setting = async (
         return { error: "Unauthorized"};
     }
 
+    if(user.isOAuth) {
+        values.email = undefined;
+        values.password = undefined;
+        values.newPassword = undefined;
+        values.is2FAenabled = undefined;
+    }
+
     await db.user.update({
         where: { id: dbUser.id },
         // spread all the values from SettingSchema
