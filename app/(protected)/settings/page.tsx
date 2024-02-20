@@ -36,6 +36,7 @@ const SettingsPage = () => {
             password: undefined,
             newPassword: undefined,
             role: user?.role || undefined,
+            enable2FA: user?.enable2FA || undefined,
         }
     });
 
@@ -141,7 +142,8 @@ const SettingsPage = () => {
                         )}  
                         />
 
-                        <FormField control={form.control} name="is2FAenabled" render={({field}) => (
+                        {user?.isOAuth === false && (<>
+                        <FormField control={form.control} name="enable2FA" render={({field}) => (
                             <FormItem className="flex flex-row items-center justify-between rounded-md border px-3 py-1 shadow-sm">
                                 
                                 <div className="space-y-0.5">
@@ -151,13 +153,14 @@ const SettingsPage = () => {
                                     </FormDescription>
                                 </div>
                                 <FormControl>
-                                    <Switch disabled={isPending} checked={field.value} onCheckedChange={field.onChange}/>
+                                    <Switch disabled={isPending} checked={field.value} onCheckedChange={field.onChange} />
                                 </FormControl>
 
                                 
                             </FormItem>
                         )}  
                         />
+                        </>)}
 
                         
 

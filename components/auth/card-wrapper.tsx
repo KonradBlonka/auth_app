@@ -26,7 +26,7 @@ export const CardWrapper = ({
 }: CardWrapperProps) => {
     return(
         // card z ui/card z komponentów ściągniętych shadcn
-        <Card className="w-[500px] shadow-md">
+        <Card className="w-[500px] shadow-md rounded-md">
             
             <CardHeader>
                 {/* musze dać 'label' ponieważ tak się odwołałem w header.tsx (exportuje wartość label z Header 

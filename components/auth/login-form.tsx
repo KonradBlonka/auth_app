@@ -32,6 +32,10 @@ import Link from "next/link";
 export const LoginForm = () => {
 
     const searchParams = useSearchParams();
+
+    // parametr for startTransition, it's for finding URL in login page (for example auth/login?settings auth/login?server)
+    const callbackURL = searchParams.get("callbackURL");
+
     const urlError = searchParams.get("error") === "OAuthAccountNotLinked" ? "Email in use with diffrent provider" : "";
 
     // useState it's for tell if user make correct form
@@ -40,6 +44,7 @@ export const LoginForm = () => {
     const [show2FA, setShow2FA] = useState(false);
 
     const [isPending, startTransition] = useTransition();
+
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
@@ -53,7 +58,7 @@ export const LoginForm = () => {
         setSuccess("");
 
         startTransition(() => {
-            login(values)
+            login(values, callbackURL)
             .then((data) => {
                 if(data?.error) {
                     // form.reset = fields will be emptied

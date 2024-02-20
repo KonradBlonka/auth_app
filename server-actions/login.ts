@@ -16,7 +16,7 @@ import { db } from "@/lib/db";
 import { get2FAConfirmationUserId } from "@/data/2FA-confirmation";
 
 //  function that accepts a parameter values conforming to the LoginSchema structure
-export const login = async (values: z.infer<typeof LoginSchema>) => {
+export const login = async (values: z.infer<typeof LoginSchema>, callbackURL?: string | null,) => {
     const validatedField = LoginSchema.safeParse(values);
     // safeParse to metoda biblioteki Zod w języku JavaScript, która umożliwia bezpieczne i szczegółowe walidowanie danych
     // zwraca szczegółową odpowiedź zamiast zgłaszać błąd, jeśli dane są nieprawidłowe
@@ -97,7 +97,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         await signIn("credentials", {
             email,
             password,
-            redirectTo: DEFAULT_LOGIN_REDIRECT
+            redirectTo: callbackURL || DEFAULT_LOGIN_REDIRECT
         })
     } catch(error) {
         if(error instanceof AuthError) {

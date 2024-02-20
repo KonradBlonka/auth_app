@@ -25,8 +25,22 @@ export default auth((req) => {
         return console.log("auth route");
     }
 
+    // if(!isLoggedIn && !isPublicRoute) {
+    //     return Response.redirect(new URL("/auth/login", nextUrl));
+    // }
+
+    // when i logged out from the site i want to have route
+    // of the last page i logged out from
     if(!isLoggedIn && !isPublicRoute) {
-        return Response.redirect(new URL("/auth/login", nextUrl));
+        let callbackURL = nextUrl.pathname;
+        if(nextUrl.search) {
+            callbackURL += nextUrl.search;
+        }
+
+        const encodedCallbackURL = encodeURIComponent(callbackURL);
+
+
+        return Response.redirect(new URL(`/auth/login?callbackURL=${encodedCallbackURL}`, nextUrl));
     }
 
     return console.log("logged in, public route");

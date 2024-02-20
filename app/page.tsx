@@ -21,7 +21,8 @@ export default function Home() {
           Auth service
         </p>
         <div>
-          <LoginButton>
+          {/* if I want go to login page when i klick sign Up without coming back to Start page delete mode="modal" */}
+          <LoginButton asChild>
             <Button variant="secondary" size="lg">
               Sign in
             </Button>

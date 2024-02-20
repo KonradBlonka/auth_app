@@ -2,6 +2,8 @@
 
 // * Get the router methods. For example router.push('/dashboard')
 import {useRouter} from "next/navigation"; 
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { LoginForm } from "@/components/auth/login-form";
 
 interface LoginButtonProps {
     children: React.ReactNode;
@@ -19,13 +21,16 @@ export const LoginButton = ({
         router.push("/auth/login");
     }
 
-    // to jest po to żeby nie zapomnieć żeby coś innego zaimplementować
-    // mogę się zmieniać pomiędzy funkcjami
     if (mode === "modal"){
         return (
-            <span>
-                TODO: IMPLEMENT MODAL
-            </span>
+            <Dialog>
+                <DialogTrigger asChild={asChild}>
+                    {children}
+                </DialogTrigger>
+                <DialogContent className="p-0 w-auto bg-transparent rounded-xl">
+                    <LoginForm />
+                </DialogContent>
+            </Dialog>
         )
     }
 

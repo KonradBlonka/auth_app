@@ -3,7 +3,7 @@ import * as z from "zod";
 
 export const SettingSchema = z.object({
     name: z.optional(z.string()),
-    is2FAenabled: z.optional(z.boolean()),
+    enable2FA: z.optional(z.boolean()),
     role: z.enum([UserRole.ADMIN, UserRole.USER]),
     email: z.optional(z.string().email()),
     password: z.optional(z.string().min(8)),
