@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { UserButton } from "@/components/auth/user-button";
 
 export const Navbar =  () => {
+    
     const pathname = usePathname();
     return(
         <nav className="flex bg-white justify-between items-center p-5 rounded-lg shadow-md w-4/5">
