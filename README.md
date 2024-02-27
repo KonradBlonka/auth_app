@@ -17,11 +17,11 @@ RESEND_API_KEY=<br />
 NEXT_PUBLIC_APP_URL=<br />
 
 ## prisma
-<!-- if u change prisma/schema.prisma -->
-npx prisma generate
-npx prisma db push
+If u changed prisma/schema.prisma <br />
+npx prisma generate <br />
+npx prisma db push <br />
 
-<!-- check local database -->
+Check local database <br />
 npx prisma studio
 
 ## Start app
