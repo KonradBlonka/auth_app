@@ -2,19 +2,19 @@
 https://auth-app-eta-two.vercel.app/
 
 ## Cloning repository
-git clone https://github.com/KonradBlonka/auth_app
+git clone https://github.com/KonradBlonka/auth_app.git
 
 ## Install packages
 npm i
 
 ## .env file
-DATABASE_URL=
-DIRECT_URL=
-AUTH_SECRET=
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-RESEND_API_KEY=
-NEXT_PUBLIC_APP_URL=
+DATABASE_URL=<br />
+DIRECT_URL=<br />
+AUTH_SECRET=<br />
+GOOGLE_CLIENT_ID=<br />
+GOOGLE_CLIENT_SECRET=<br />
+RESEND_API_KEY=<br />
+NEXT_PUBLIC_APP_URL=<br />
 
 ## prisma
 <!-- if u change prisma/schema.prisma -->
@@ -26,23 +26,6 @@ npx prisma studio
 
 ## Start app
 npm run dev
-
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Learn More
