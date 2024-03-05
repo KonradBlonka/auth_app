@@ -18,13 +18,9 @@ export const Header = ({
     return(
         <div className="w-full flex flex-col gap-y-4 items-center">
             <h1 className={cn("text-3xl font-semibold", font.className)}>
-                Nazwa Firmy
-            </h1>
-            <p className="text-sm">
                 {label}
-            </p>
+            </h1>
         </div>
     )
-
 }
 
