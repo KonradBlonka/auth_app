@@ -10,9 +10,15 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { FaUser } from "react-icons/fa"
 import { currentUser } from "@/hooks/current-user";
 import { LogoutButton } from "@/components/auth/logout-button";
-import { BiLogOut } from "react-icons/bi";
+import { BiLogOut, BiCog, BiUser, BiBrain, BiServer } from "react-icons/bi";
+import { usePathname } from "next/navigation";
+import { SettingsButton } from "./user-buttons/setting-button";
+import { ClientButton } from "./user-buttons/client-button";
+import { AdminButton } from "./user-buttons/admin-button";
+import { ServerButton } from "./user-buttons/server-button";
 
 export const UserButton = () => {
+    const pathname = usePathname();
     const user = currentUser();
     return(
         <DropdownMenu>
@@ -32,6 +38,30 @@ export const UserButton = () => {
                         Logout
                     </DropdownMenuItem>
                 </LogoutButton>
+                <SettingsButton>
+                    <DropdownMenuItem className="cursor-pointer">
+                        <BiCog className="h-4 w-4 mr-2"/>
+                        Settings
+                    </DropdownMenuItem>
+                </SettingsButton>
+                <ClientButton>
+                    <DropdownMenuItem className="cursor-pointer">
+                        <BiUser className="h-4 w-4 mr-2"/>
+                        Client
+                    </DropdownMenuItem>
+                </ClientButton>
+                <AdminButton>
+                    <DropdownMenuItem className="cursor-pointer">
+                        <BiBrain className="h-4 w-4 mr-2"/>
+                        Admin
+                    </DropdownMenuItem>
+                </AdminButton>
+                <ServerButton>
+                    <DropdownMenuItem className="cursor-pointer">
+                        <BiServer className="h-4 w-4 mr-2"/>
+                        Server
+                    </DropdownMenuItem>
+                </ServerButton>
             </DropdownMenuContent>
         </DropdownMenu>
 

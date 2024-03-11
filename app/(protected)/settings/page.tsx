@@ -60,12 +60,13 @@ const SettingsPage = () => {
     return ( 
         <Card className="w-4/5">
             <CardHeader>
-                <p className="text-xl text-center">Settings</p>
+                <p className="text-xl text-center">Settings Page</p>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
                     <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
                         <div className="space-y-5">
+
                         <FormField control={form.control} name="name" render={({field}) => (
                             <FormItem>
                                 <FormLabel>
@@ -154,9 +155,7 @@ const SettingsPage = () => {
                                 </div>
                                 <FormControl>
                                     <Switch disabled={isPending} checked={field.value} onCheckedChange={field.onChange} />
-                                </FormControl>
-
-                                
+                                </FormControl>                                
                             </FormItem>
                         )}  
                         />
