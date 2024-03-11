@@ -171,9 +171,10 @@ const SettingsPage = () => {
                     </form>
                     
                 </Form>
-                <div className="space-y-5">Delete account
+                {/* TODO: DELETE BUTTON */}
+                {/* <div className="space-y-5">Delete account
                     <Button>DELETE</Button>
-                </div>
+                </div> */}
             </CardContent>
         </Card>
      );
