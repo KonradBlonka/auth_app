@@ -169,7 +169,11 @@ const SettingsPage = () => {
                         <Button disabled={isPending} type="submit">Save</Button>
                         
                     </form>
+                    
                 </Form>
+                <div className="space-y-5">Delete account
+                    <Button>DELETE</Button>
+                </div>
             </CardContent>
         </Card>
      );
