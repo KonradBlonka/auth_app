@@ -23,7 +23,8 @@ export const DeleteButton = ({
     if(mode === "modal") {
         return(
             <Dialog>
-                <DialogTrigger>
+                <DialogTrigger asChild={asChild}>
+                    {children}
 
                 </DialogTrigger>
             </Dialog>
